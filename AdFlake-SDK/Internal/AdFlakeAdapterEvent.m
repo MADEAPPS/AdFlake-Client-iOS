@@ -55,7 +55,7 @@
 			[adFlakeView adapterDidFinishAdRequest:self];
 		}
 		else {
-			AFLogWarn(@"Delegate does not implement function %@ nor %@", eventSelectorStr, eventSelectorColonStr);
+			AFLogWarn(@"Delegate does not implement instance method '%@' nor '%@' for custom event with name '%@'", eventSelectorStr, eventSelectorColonStr, [eventKeys objectAtIndex:0]);
 			[adFlakeView adapter:self didFailAd:nil];
 		}
 	}

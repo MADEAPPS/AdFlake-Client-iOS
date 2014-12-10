@@ -55,7 +55,10 @@ typedef enum {
 	AdFlakeAdNetworkTypeMobFox			  = 27,
 	AdFlakeAdNetworkTypeMojiva			  = 28,
 	AdFlakeAdNetworkTypeHuntMobile		  = 29,
-	AdFlakeAdNetworkTypeTodacell		  = 30
+	AdFlakeAdNetworkTypeTodacell		  = 30,
+	AdFlakeAdNetworkTypeAppBrain		  = 31,	/**< NOTE: Android only. */
+	AdFlakeAdNetworkTypeAdColony		  = 32,
+	AdFlakeAdNetworkTypeAdMobVideo		  = 33
 } AdFlakeAdNetworkType;
 
 @class AdFlakeView;
@@ -80,6 +83,11 @@ typedef enum {
  * to do so is to implement the +load function and register there.
  */
 //+ (void)load;
+
+/**
+ * Subclass can implement +prepareForConfig: to perform preloading and early initialization.
+ */
+//+ (void)prepareForConfig:(AdFlakeAdNetworkConfig*)networkConfig;
 
 /**
  * Default initializer. Subclasses do not need to override this method unless

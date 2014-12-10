@@ -73,6 +73,8 @@ NSInteger adNetworkPriorityComparer(id a, id b, void *ctx)
 @synthesize prioritizedAdNetCfgs;
 @synthesize currAdapter;
 @synthesize lastAdapter;
+@synthesize currVideoAdapter;
+@synthesize lastVideoAdapter;
 @synthesize lastRequestTime;
 @synthesize refreshTimer;
 @synthesize lastError;
@@ -89,6 +91,11 @@ NSInteger adNetworkPriorityComparer(id a, id b, void *ctx)
 	}
 	if (self.lastAdapter) {
 		self.lastAdapter.adFlakeDelegate = theDelegate;
+	}if (self.currVideoAdapter) {
+		self.currVideoAdapter.adFlakeDelegate = theDelegate;
+	}
+	if (self.lastVideoAdapter) {
+		self.lastVideoAdapter.adFlakeDelegate = theDelegate;
 	}
 	[self didChangeValueForKey:@"delegate"];
 }
@@ -122,6 +129,8 @@ NSInteger adNetworkPriorityComparer(id a, id b, void *ctx)
 
 		// default config store. Can be overridden for testing
 		self.configStore = [AdFlakeConfigStore sharedStore];
+		
+		usedVideoNetworkConfigs = [[NSMutableArray alloc] init];
 
 		// get notified of app activity
 		NSNotificationCenter *notifCenter = [NSNotificationCenter defaultCenter];
@@ -155,6 +164,11 @@ NSInteger adNetworkPriorityComparer(id a, id b, void *ctx)
 	[currAdapter release], currAdapter = nil;
 	lastAdapter.adFlakeDelegate = nil, lastAdapter.adFlakeView = nil;
 	[lastAdapter release], lastAdapter = nil;
+	
+	currVideoAdapter.adFlakeDelegate = nil, currVideoAdapter.adFlakeView = nil;
+	[currVideoAdapter release], currVideoAdapter = nil;
+	lastVideoAdapter.adFlakeDelegate = nil, lastVideoAdapter.adFlakeView = nil;
+	[lastVideoAdapter release], lastVideoAdapter = nil;
 	[lastRequestTime release], lastRequestTime = nil;
 	[pendingAdapters release], pendingAdapters = nil;
 	if (refreshTimer != nil) {
@@ -163,6 +177,8 @@ NSInteger adNetworkPriorityComparer(id a, id b, void *ctx)
 	}
 	[lastError release], lastError = nil;
 
+	[usedVideoNetworkConfigs release], usedVideoNetworkConfigs = nil;
+	
 	[super dealloc];
 }
 
@@ -259,6 +275,16 @@ static id<AdFlakeDelegate> classAdFlakeDelegateForConfig = nil;
 }
 
 static BOOL randSeeded = NO;
+
+- (double)nextRandom
+{
+	if (!randSeeded) {
+		srandom(CFAbsoluteTimeGetCurrent());
+		randSeeded = YES;
+	}
+	return ((double)(random()-1)/RAND_MAX);
+}
+
 - (double)nextDart {
 	if (testDarts != nil) {
 		if (testDartIndex >= [testDarts count]) {
@@ -273,11 +299,7 @@ static BOOL randSeeded = NO;
 		return dart;
 	}
 	else {
-		if (!randSeeded) {
-			srandom(CFAbsoluteTimeGetCurrent());
-			randSeeded = YES;
-		}
-		return ((double)(random()-1)/RAND_MAX) * totalPercent;
+		return [self nextRandom] * totalPercent;
 	}
 }
 
@@ -418,6 +440,175 @@ static BOOL randSeeded = NO;
 }
 
 #pragma mark Ads management public methods
+
+- (void)requestAndPresentVideoAdModalWithNetworkConfig:(AdFlakeAdNetworkConfig*)videoNetworkConfig
+{
+	if (videoNetworkConfig == nil) {
+		if ([delegate respondsToSelector:@selector(adFlakeDidFailToRequestAndPresentVideoAdModal:)])
+		{
+			[delegate performSelector:@selector(adFlakeDidFailToRequestAndPresentVideoAdModal:) withObject:self];
+		}
+		return;
+	}
+	
+	AdFlakeAdNetworkAdapter *adapter = [[videoNetworkConfig.adapterClass alloc] initWithAdFlakeDelegate:delegate
+																								   view:self
+																								 config:config
+																						  networkConfig:videoNetworkConfig];
+	// keep the last adapter around to catch stale ad network delegate calls
+	// during transitions
+	self.lastVideoAdapter = self.currVideoAdapter;
+	self.currVideoAdapter = adapter;
+	[adapter release];
+	
+	[usedVideoNetworkConfigs addObject:videoNetworkConfig];
+	
+	// If last adapter is of the same network type, make the last adapter stop
+	// being an ad network view delegate to prevent the last adapter from calling
+	// back to this AdFlakeView during the transition and afterwards.
+	// We should not do this for all adapters, because if the last adapter is
+	// still in progress, we need to know about it in the adapter callbacks.
+	// That the last adapter is the same type as the new adapter is possible only
+	// if the last ad request finished, i.e. called back to its adapters. There
+	// are cases, e.g. iAd, when the ad network may call back multiple times,
+	// because of internal refreshes.
+	if (self.lastVideoAdapter.networkConfig.networkType == self.currVideoAdapter.networkConfig.networkType) {
+		[self.lastVideoAdapter stopBeingDelegate];
+	}
+	
+	[self.currVideoAdapter getAd];
+}
+
+- (void)requestAndPresentVideoAdModal
+{
+	// only make request in main thread
+	if (![NSThread isMainThread]) {
+		[self performSelectorOnMainThread:@selector(requestAndPresentVideoAdModal)
+							   withObject:nil
+							waitUntilDone:NO];
+		return;
+	}
+	
+	if (config.videoAdsAreOff || showingModalView || !config) {
+		if ([delegate respondsToSelector:@selector(adFlakeDidFailToRequestAndPresentVideoAdModal:)])
+		{
+			[delegate performSelector:@selector(adFlakeDidFailToRequestAndPresentVideoAdModal:) withObject:self];
+		}
+		return;
+	}
+	
+	[usedVideoNetworkConfigs removeAllObjects];
+	// for interstitials we just dart a random interstitial each time
+	double currentRandom = 0.0f;
+	double actualPercent = 0.0;
+	
+	for (AdFlakeAdNetworkConfig *networkConfig in self.config.videoAdNetworkConfigs)
+	{
+//		if (networkConfig.trafficPercentage == 0.0f)
+//		{
+//			[usedVideoNetworkConfigs addObject:networkConfig];
+//			continue;
+//		}
+		
+		actualPercent += networkConfig.trafficPercentage;
+	}
+	const double dart = [self nextRandom] * actualPercent;
+	
+	AFLogDebug(@"video dart=%f", dart);
+
+	AdFlakeAdNetworkConfig *videoNetworkConfig = nil;
+	
+	for (AdFlakeAdNetworkConfig *networkConfig in self.config.videoAdNetworkConfigs)
+	{
+		if ([usedVideoNetworkConfigs containsObject:networkConfig])
+			continue;
+	
+		if (dart >= currentRandom && dart <= currentRandom + networkConfig.trafficPercentage)
+		{
+			// we hit this network
+			AFLogDebug(@"using network=%@", networkConfig);
+			videoNetworkConfig = networkConfig;
+			break;
+		}
+		
+		currentRandom += networkConfig.trafficPercentage;
+		
+		AFLogDebug(@"config=%@", networkConfig);
+	}
+	
+	[self requestAndPresentVideoAdModalWithNetworkConfig:videoNetworkConfig];
+}
+
+- (void)tryRequestNextVideoAdModal
+{
+	// only make request in main thread
+	if (![NSThread isMainThread]) {
+		[self performSelectorOnMainThread:@selector(tryRequestNextVideoAdModal)
+							   withObject:nil
+							waitUntilDone:NO];
+		return;
+	}
+	
+	if (usedVideoNetworkConfigs.count == 0 ||
+		usedVideoNetworkConfigs.count == self.config.videoAdNetworkConfigs.count)
+	{
+		// failed
+		if ([delegate respondsToSelector:@selector(adFlakeDidFailToRequestAndPresentVideoAdModal:)])
+		{
+			[delegate performSelector:@selector(adFlakeDidFailToRequestAndPresentVideoAdModal:) withObject:self];
+		}
+		return;
+	}
+	
+	// for interstitials we just dart a random interstitial each time
+	double currentRandom = 0.0f;
+	double actualPercent = 0.0;
+	
+	for (AdFlakeAdNetworkConfig *cfg in self.config.videoAdNetworkConfigs) {
+		
+		// skip already used network configs
+		if ([usedVideoNetworkConfigs containsObject:cfg])
+			continue;
+		
+		actualPercent += cfg.trafficPercentage;
+	}
+	const double dart = [self nextRandom] * actualPercent;
+	
+	AFLogDebug(@"video dart=%f", dart);
+	
+	AdFlakeAdNetworkConfig *videoNetworkConfig = nil;
+	
+	for (AdFlakeAdNetworkConfig *networkConfig in self.config.videoAdNetworkConfigs) {
+		
+		// skip already used network configs
+		if ([usedVideoNetworkConfigs containsObject:networkConfig])
+			continue;
+		
+		if (dart >= currentRandom && dart <= currentRandom + networkConfig.trafficPercentage)
+		{
+			// we hit this network
+			AFLogDebug(@"using network=%@", networkConfig);
+			videoNetworkConfig = networkConfig;
+			break;
+		}
+		
+		currentRandom += networkConfig.trafficPercentage;
+		
+		AFLogDebug(@"config=%@", networkConfig);
+	}
+	
+	if (videoNetworkConfig == nil)
+	{
+		// failed
+		if ([delegate respondsToSelector:@selector(adFlakeDidFailToRequestAndPresentVideoAdModal:)])
+		{
+			[delegate performSelector:@selector(adFlakeDidFailToRequestAndPresentVideoAdModal:) withObject:self];
+		}
+		return;
+	}
+	
+	[self requestAndPresentVideoAdModalWithNetworkConfig:videoNetworkConfig];
+}
 
 - (void)requestFreshAd {
 	// only make request in main thread
@@ -765,7 +956,7 @@ static BOOL randSeeded = NO;
 }
 
 
-#pragma mark Adapter callbacks
+#pragma mark - Adapter callbacks
 
 // Chores that are common to all adapter callbacks
 - (void)adRequestReturnsForAdapter:(AdFlakeAdNetworkAdapter *)adapter {
@@ -790,6 +981,49 @@ static BOOL randSeeded = NO;
 		[pendingAdapters removeObjectForKey:netTypeKey];
 	}
 }
+
+#pragma mark Video Ads
+
+- (void)adapterUserWatchedEntireVideoAdModal:(AdFlakeAdNetworkAdapter *)adapter
+{
+	AFLogDebug(@"User watched entire video ad from adapter (nid %@)", adapter.networkConfig.nid);
+
+	
+	if ([delegate respondsToSelector:@selector(adFlakeUserDidWatchEntireVideoAdModal:)])
+	{
+		[delegate performSelector:@selector(adFlakeUserDidWatchEntireVideoAdModal:) withObject:self];
+	}
+}
+
+- (void)adapterDidReceiveVideoAd:(AdFlakeAdNetworkAdapter *)adapter
+{
+	AFLogDebug(@"Received ad from adapter (nid %@)", adapter.networkConfig.nid);
+	
+	// remove all configs
+	[usedVideoNetworkConfigs removeAllObjects];
+	
+	if ([delegate respondsToSelector:@selector(adFlakeWillPresentVideoAdModal:)])
+	{
+		[delegate performSelector:@selector(adFlakeWillPresentVideoAdModal:) withObject:self];
+	}
+	// report impression. No need to notify delegate because delegate is notified
+	// via Generic Notification or event.
+	if ([adapter shouldSendExMetric]) {
+		[self reportExImpression:adapter.networkConfig.nid
+						 netType:adapter.networkConfig.networkType];
+	}
+}
+
+- (void)adapter:(AdFlakeAdNetworkAdapter *)adapter didFailVideoAd:(NSError *)error
+{
+	AFLogDebug(@"Failed to receive ad from adapter (nid %@): %@",
+			   adapter.networkConfig.nid, error);
+	
+	// try to roll over
+	[self tryRequestNextVideoAdModal];
+}
+
+#pragma mark Banner Ads
 
 - (void)adapter:(AdFlakeAdNetworkAdapter *)adapter
 didReceiveAdView:(UIView *)view {
@@ -937,6 +1171,19 @@ didReceiveAdView:(UIView *)view {
 	if ([delegate respondsToSelector:@selector(adFlakeDidReceiveConfig:)]) {
 		[delegate adFlakeDidReceiveConfig:self];
 	}
+	
+	if (cfg.videoAdsAreOff)
+	{
+		if ([delegate respondsToSelector:
+			 @selector(adFlakeReceivedNotificationVideoAdsAreOff:)]) {
+			// to prevent self being freed before this returns, in case the
+			// delegate decides to release this
+			[self retain];
+			[delegate adFlakeReceivedNotificationVideoAdsAreOff:self];
+			[self autorelease];
+		}
+	}
+	
 	if (cfg.adsAreOff) {
 		if ([delegate respondsToSelector:
 			 @selector(adFlakeReceivedNotificationAdsAreOff:)]) {

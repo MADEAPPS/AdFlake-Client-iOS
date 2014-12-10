@@ -107,6 +107,27 @@
 - (void)adFlakeReceivedNotificationAdsAreOff:(AdFlakeView *)adFlakeView;
 
 /**
+ * In the event that video ads are OFF, you can listen to this callback method to
+ * determine that video ads have been turned off.
+ */
+- (void)adFlakeReceivedNotificationVideoAdsAreOff:(AdFlakeView *)adFlakeView;
+
+/**
+ * In the event that video ads failed to play the delegate will be invoked.
+ */
+- (void)adFlakeDidFailToRequestAndPresentVideoAdModal:(AdFlakeView*)adFlakeView;
+
+/**
+ * In the event that a video ad has been recieved and will be played the delegate will be invoked.
+ */
+- (void)adFlakeWillPresentVideoAdModal:(AdFlakeView*)adFlakeView;
+
+/**
+ * In the event that a video ad has been watched to the end the delegate will be invoked.
+ */
+- (void)adFlakeUserDidWatchEntireVideoAdModal:(AdFlakeView*)adFlakeView;
+
+/**
  * These notifications will let you know when a user is being shown a full screen
  * webview canvas with an ad because they tapped on an ad.  You should listen to
  * these notifications to determine when to pause/resume your game--if you're

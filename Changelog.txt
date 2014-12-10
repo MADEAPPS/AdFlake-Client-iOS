@@ -2,6 +2,10 @@
 
 For a full detailed change log visit http://www.adflake.com/sdk
 
+==== Version 4.5.0 (Dec 10 2014) ====
+- Added support for Interstitial Videos
+- Added support for AdColony Interstitial Videos
+- Added support for AdMob Interstitial Videos
 
 ==== Version 4.0.0 (Oct 1 2013) ====
 - Updated all network adapters

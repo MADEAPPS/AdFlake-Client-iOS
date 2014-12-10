@@ -65,8 +65,12 @@ extern const float kAdFlakeAdRequestTimeout;
 	BOOL requesting;
 	AdFlakeAdNetworkAdapter *currAdapter;
 	AdFlakeAdNetworkAdapter *lastAdapter;
+	AdFlakeAdNetworkAdapter *currVideoAdapter;
+	AdFlakeAdNetworkAdapter *lastVideoAdapter;
 	NSDate *lastRequestTime;
 	NSMutableDictionary *pendingAdapters;
+	
+	NSMutableArray *usedVideoNetworkConfigs;
 
 	NSTimer *refreshTimer;
 
@@ -136,6 +140,12 @@ extern const float kAdFlakeAdRequestTimeout;
  *
  */
 - (BOOL)adExists;
+
+
+/**
+ * Invoke this method to load and automatically present a video ad.
+ */
+- (void)requestAndPresentVideoAdModal;
 
 /**
  * Different ad networks may return different ad sizes. You may adjust the size
@@ -223,6 +233,21 @@ extern const float kAdFlakeAdRequestTimeout;
  * Called by Adapters when ad view failed.
  */
 - (void)adapter:(AdFlakeAdNetworkAdapter *)adapter didFailAd:(NSError *)error;
+
+/**
+ * Called by Adapters when there's a new video ad view.
+ */
+- (void)adapterDidReceiveVideoAd:(AdFlakeAdNetworkAdapter *)adapter;
+
+/**
+ * Called by Adapters when the user watched 100% of a video.
+ */
+- (void)adapterUserWatchedEntireVideoAdModal:(AdFlakeAdNetworkAdapter *)adapter;
+
+/**
+ * Called by Adapters when video ad view failed.
+ */
+- (void)adapter:(AdFlakeAdNetworkAdapter *)adapter didFailVideoAd:(NSError *)error;
 
 /**
  * Called by Adapters when the ad request is finished, but the ad view is

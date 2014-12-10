@@ -135,6 +135,11 @@
 			[self release];
 			return nil;
 		}
+		
+		if ([adapterClass respondsToSelector:@selector(prepareForConfig:)])
+		{
+			[adapterClass performSelector:@selector(prepareForConfig:) withObject:self];
+		}
 	}
 
 	return self;

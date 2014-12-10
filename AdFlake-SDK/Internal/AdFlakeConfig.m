@@ -64,8 +64,8 @@ BOOL AFGetDoubleValue(double *var, id val) {
 
 @synthesize appKey;
 @synthesize configURL;
-@synthesize adsAreOff;
-@synthesize adNetworkConfigs;
+@synthesize adsAreOff, videoAdsAreOff;
+@synthesize adNetworkConfigs, videoAdNetworkConfigs;
 @synthesize backgroundColor;
 @synthesize textColor;
 @synthesize refreshInterval;
@@ -85,6 +85,7 @@ BOOL AFGetDoubleValue(double *var, id val) {
 		appKey = [[NSString alloc] initWithString:ak];
 		legacy = NO;
 		adNetworkConfigs = [[NSMutableArray alloc] init];
+		videoAdNetworkConfigs = [[NSMutableArray alloc] init];
 		delegates = [[NSMutableArray alloc] init];
 		hasConfig = NO;
 		[self addDelegate:delegate];
@@ -159,13 +160,14 @@ BOOL AFGetDoubleValue(double *var, id val) {
 	NSString *configs = [NSString stringWithFormat:
 						 @"location_access:%d fg_color:%@ bg_color:%@ cycle_time:%lf transition:%d",
 						 locationOn, textColor, backgroundColor, refreshInterval, bannerAnimationType];
-	return [NSString stringWithFormat:@"%@:\n%@ networks:%@",desc,configs,adNetworkConfigs];
+	return [NSString stringWithFormat:@"%@:\n%@ networks:%@\n video networks: %@", desc, configs, adNetworkConfigs, videoAdNetworkConfigs];
 }
 
 - (void)dealloc {
 	[appKey release], appKey = nil;
 	[configURL release], configURL = nil;
 	[adNetworkConfigs release], adNetworkConfigs = nil;
+	[videoAdNetworkConfigs release], videoAdNetworkConfigs = nil;
 	[backgroundColor release], backgroundColor = nil;
 	[textColor release], textColor = nil;
 	[delegates release], delegates = nil;
@@ -258,41 +260,86 @@ BOOL AFGetDoubleValue(double *var, id val) {
 		AFLogWarn(@"No extra info dict in ad network config");
 	}
 
-	id rations = [configDict objectForKey:@"rations"];
-	double totalWeight = 0.0;
-	if (rations != nil && [rations isKindOfClass:[NSArray class]]) {
-		if ([(NSArray *)rations count] == 0) {
-			adsAreOff = YES;
-			return YES;
-		}
-		adsAreOff = NO;
-		for (id c in (NSArray *)rations) {
-			if (![c isKindOfClass:[NSDictionary class]]) {
-				AFLogWarn(@"Element in rations array is not a dictionary %@ in ad network config",c);
-				continue;
-			}
-			AdFlakeError *adNetConfigError = nil;
-			AdFlakeAdNetworkConfig *adNetConfig =
-			[[AdFlakeAdNetworkConfig alloc] initWithDictionary:(NSDictionary *)c
-											 adNetworkRegistry:adNetworkRegistry
-														 error:&adNetConfigError];
-			if (adNetConfig != nil) {
-				[adNetworkConfigs addObject:adNetConfig];
-				totalWeight += adNetConfig.trafficPercentage;
-				[adNetConfig release];
-			}
-			else {
-				AFLogWarn(@"Cannot create ad network config from %@: %@", c,
-						  adNetConfigError != nil? [adNetConfigError localizedDescription]:@"");
-			}
-		}
-	}
-	else {
-		AFLogError(@"No rations array in ad network config");
-	}
-
-	if (totalWeight == 0.0) {
+	// parse ad rations
+	{
 		adsAreOff = YES;
+		id rations = [configDict objectForKey:@"rations"];
+		double totalWeight = 0.0;
+		if (rations != nil && [rations isKindOfClass:[NSArray class]])
+		{
+			if ([(NSArray *)rations count] > 0)
+			{
+				adsAreOff = NO;
+				for (id c in (NSArray *)rations) {
+					if (![c isKindOfClass:[NSDictionary class]]) {
+						AFLogWarn(@"Element in rations array is not a dictionary %@ in ad network config",c);
+						continue;
+					}
+					AdFlakeError *adNetConfigError = nil;
+					AdFlakeAdNetworkConfig *adNetConfig =
+					[[AdFlakeAdNetworkConfig alloc] initWithDictionary:(NSDictionary *)c
+													 adNetworkRegistry:adNetworkRegistry
+																 error:&adNetConfigError];
+					if (adNetConfig != nil) {
+						[adNetworkConfigs addObject:adNetConfig];
+						totalWeight += adNetConfig.trafficPercentage;
+						[adNetConfig release];
+					}
+					else {
+						AFLogWarn(@"Cannot create ad network config from %@: %@", c,
+								  adNetConfigError != nil? [adNetConfigError localizedDescription]:@"");
+					}
+				}
+			}
+		}
+		else {
+			AFLogError(@"No rations array in ad network config");
+		}
+		
+		if (totalWeight == 0.0) {
+			adsAreOff = YES;
+		}
+	}
+	// parse video ad rations
+	{
+		videoAdsAreOff = YES;
+		id rations = [configDict objectForKey:@"videoRations"];
+		double totalWeight = 0.0;
+		
+		if (rations != nil && [rations isKindOfClass:[NSArray class]])
+		{
+			if ([(NSArray *)rations count] > 0)
+			{
+				videoAdsAreOff = NO;
+				for (id c in (NSArray *)rations) {
+					if (![c isKindOfClass:[NSDictionary class]]) {
+						AFLogWarn(@"Element in rations array is not a dictionary %@ in ad network config",c);
+						continue;
+					}
+					AdFlakeError *adNetConfigError = nil;
+					AdFlakeAdNetworkConfig *adNetConfig =
+					[[AdFlakeAdNetworkConfig alloc] initWithDictionary:(NSDictionary *)c
+													 adNetworkRegistry:adNetworkRegistry
+																 error:&adNetConfigError];
+					if (adNetConfig != nil) {
+						[videoAdNetworkConfigs addObject:adNetConfig];
+						totalWeight += adNetConfig.trafficPercentage;
+						[adNetConfig release];
+					}
+					else {
+						AFLogWarn(@"Cannot create video ad network config from %@: %@", c,
+								  adNetConfigError != nil? [adNetConfigError localizedDescription]:@"");
+					}
+				}
+			}
+		}
+		else {
+			AFLogError(@"No video rations array in ad network config");
+		}
+		
+		if (totalWeight == 0.0) {
+			videoAdsAreOff = YES;
+		}
 	}
 
 	return YES;

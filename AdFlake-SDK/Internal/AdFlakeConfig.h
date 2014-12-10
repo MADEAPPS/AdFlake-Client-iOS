@@ -56,8 +56,9 @@ typedef enum {
 	NSURL *configURL;
 	BOOL legacy;
 
-	BOOL adsAreOff;
+	BOOL adsAreOff, videoAdsAreOff;
 	NSMutableArray *adNetworkConfigs;
+	NSMutableArray *videoAdNetworkConfigs;
 
 	UIColor *backgroundColor;
 	UIColor *textColor;
@@ -84,8 +85,8 @@ typedef enum {
 
 @property (nonatomic,readonly) BOOL hasConfig;
 
-@property (nonatomic,readonly) BOOL adsAreOff;
-@property (nonatomic,readonly) NSArray *adNetworkConfigs;
+@property (nonatomic,readonly) BOOL adsAreOff, videoAdsAreOff;
+@property (nonatomic,readonly) NSArray *adNetworkConfigs, *videoAdNetworkConfigs;
 @property (nonatomic,readonly) UIColor *backgroundColor;
 @property (nonatomic,readonly) UIColor *textColor;
 @property (nonatomic,readonly) NSTimeInterval refreshInterval;

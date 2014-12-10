@@ -60,11 +60,11 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
+	
 	self.adView = [AdFlakeView requestAdFlakeViewWithDelegate:self];
-	self.adView.autoresizingMask =
-    UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
+	self.adView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin;
 	[self.view addSubview:self.adView];
-
+	
 	if (getenv("ADFLAKE_FAKE_DARTS")) {
 		// To make ad network selection deterministic
 		const char *dartcstr = getenv("ADFLAKE_FAKE_DARTS");
@@ -80,105 +80,21 @@
 		}
 		self.adView.testDarts = darts;
 	}
-
+	
 	UIDevice *device = [UIDevice currentDevice];
 	if ([device respondsToSelector:@selector(isMultitaskingSupported)] &&
 		[device isMultitaskingSupported]) {
-		[[NSNotificationCenter defaultCenter]
-		 addObserver:self
-		 selector:@selector(enterForeground:)
-		 name:UIApplicationWillEnterForegroundNotification
-		 object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enterForeground:)  name:UIApplicationWillEnterForegroundNotification object:nil];
 	}
 }
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
-	[self adjustLayoutToOrientation:self.interfaceOrientation];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)io {
-	return YES;
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
-                                duration:(NSTimeInterval)duration {
-	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-	[self.adView rotateToOrientation:toInterfaceOrientation];
+- (void)viewDidLayoutSubviews
+{
 	[self adjustAdSize];
-}
-
-- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)io
-                                         duration:(NSTimeInterval)duration {
-	[self adjustLayoutToOrientation:io];
-}
-
-- (void)adjustLayoutToOrientation:(UIInterfaceOrientation)newOrientation {
-	UIView *button1 = [self.view viewWithTag:SIMPVIEW_BUTTON_1_TAG];
-	UIView *button2 = [self.view viewWithTag:SIMPVIEW_BUTTON_2_TAG];
-	UIView *button3 = [self.view viewWithTag:SIMPVIEW_BUTTON_3_TAG];
-	UIView *button4 = [self.view viewWithTag:SIMPVIEW_BUTTON_4_TAG];
-	UIView *switch1 = [self.view viewWithTag:SIMPVIEW_SWITCH_1_TAG];
-	UIView *label1 = [self.view viewWithTag:SIMPVIEW_LABEL_1_TAG];
-	assert(button1 != nil);
-	assert(button2 != nil);
-	assert(button3 != nil);
-	assert(button4 != nil);
-	assert(switch1 != nil);
-	assert(label1 != nil);
-	if (UIInterfaceOrientationIsPortrait(currLayoutOrientation)
-		&& UIInterfaceOrientationIsLandscape(newOrientation)) {
-		CGPoint newCenter = button1.center;
-		newCenter.y -= SIMPVIEW_BUTTON_1_OFFSET;
-		button1.center = newCenter;
-		newCenter = button2.center;
-		newCenter.y -= SIMPVIEW_BUTTON_2_OFFSET;
-		button2.center = newCenter;
-		newCenter = button3.center;
-		newCenter.y -= SIMPVIEW_BUTTON_3_OFFSET;
-		button3.center = newCenter;
-		newCenter = button4.center;
-		newCenter.y -= SIMPVIEW_BUTTON_4_OFFSET;
-		button4.center = newCenter;
-		newCenter = switch1.center;
-		newCenter.y -= SIMPVIEW_SWITCH_1_OFFSET;
-		switch1.center = newCenter;
-		newCenter = label1.center;
-		newCenter.y -= SIMPVIEW_LABEL_1_OFFSET;
-		newCenter.x += SIMPVIEW_LABEL_1_OFFSETX;
-		label1.center = newCenter;
-		CGRect newFrame = self.label.frame;
-		newFrame.size.height -= 45;
-		newFrame.origin.y -= SIMPVIEW_LABEL_OFFSET;
-		self.label.frame = newFrame;
-	}
-	else if (UIInterfaceOrientationIsLandscape(currLayoutOrientation)
-			 && UIInterfaceOrientationIsPortrait(newOrientation)) {
-		CGPoint newCenter = button1.center;
-		newCenter.y += SIMPVIEW_BUTTON_1_OFFSET;
-		button1.center = newCenter;
-		newCenter = button2.center;
-		newCenter.y += SIMPVIEW_BUTTON_2_OFFSET;
-		button2.center = newCenter;
-		newCenter = button3.center;
-		newCenter.y += SIMPVIEW_BUTTON_3_OFFSET;
-		button3.center = newCenter;
-		newCenter = button4.center;
-		newCenter.y += SIMPVIEW_BUTTON_4_OFFSET;
-		button4.center = newCenter;
-		newCenter = switch1.center;
-		newCenter.y += SIMPVIEW_SWITCH_1_OFFSET;
-		switch1.center = newCenter;
-		newCenter = label1.center;
-		newCenter.y += SIMPVIEW_LABEL_1_OFFSET;
-		newCenter.x -= SIMPVIEW_LABEL_1_OFFSETX;
-		label1.center = newCenter;
-		CGRect newFrame = self.label.frame;
-		newFrame.size.height += 45;
-		newFrame.origin.y += SIMPVIEW_LABEL_OFFSET;
-		self.label.frame = newFrame;
-	}
-	currLayoutOrientation = newOrientation;
 }
 
 - (void)adjustAdSize {
@@ -191,13 +107,6 @@
 	newFrame.origin.x = (self.view.bounds.size.width - adSize.width)/2;
 	adView.frame = newFrame;
 	[UIView commitAnimations];
-}
-
-- (void)didReceiveMemoryWarning {
-	// Releases the view if it doesn't have a superview.
-	[super didReceiveMemoryWarning];
-
-	// Release any cached data, images, etc that aren't in use.
 }
 
 - (void)viewDidUnload {
@@ -247,6 +156,13 @@
 	}
 }
 
+
+- (IBAction)presentVideoAd:(id)sender
+{
+	self.videoStatusLabel.text = @"Requesting video ad...";
+	[self.adView requestAndPresentVideoAdModal];
+}
+
 #pragma mark AdFlakeDelegate methods
 
 - (NSString *)adFlakeApplicationKey {
@@ -256,6 +172,22 @@
 - (UIViewController *)viewControllerForPresentingModalView {
 	return [((AdFlakeSDKSampleAppDelegate *)[[UIApplication sharedApplication] delegate]) navigationController];
 }
+
+- (void)adFlakeWillPresentVideoAdModal:(AdFlakeView *)adFlakeView
+{
+	self.videoStatusLabel.text = @"Will present video ad!";
+}
+
+- (void)adFlakeDidFailToRequestAndPresentVideoAdModal:(AdFlakeView *)adFlakeView
+{
+	self.videoStatusLabel.text = @"Failed to present video ad!";
+}
+
+- (void)adFlakeUserDidWatchEntireVideoAdModal:(AdFlakeView*)adFlakeView
+{
+	self.videoStatusLabel.text = @"User watched a video ad!";
+}
+
 
 - (NSURL *)adFlakeConfigURL {
 	return [NSURL URLWithString:kSampleConfigURL];
@@ -301,6 +233,10 @@
 	self.label.text = @"Generic Notification";
 }
 
+- (void)adFlakeReceivedNotificationVideoAdsAreOff:(AdFlakeView*)adFlakeView {
+	self.videoStatusLabel.text = @"Video Ads are off";
+}
+
 - (void)adFlakeReceivedNotificationAdsAreOff:(AdFlakeView *)adFlakeView {
 	self.label.text = @"Ads are off";
 }
@@ -315,6 +251,7 @@
 
 - (void)adFlakeDidReceiveConfig:(AdFlakeView *)adFlakeView {
 	self.label.text = @"Received config. Requesting ad...";
+	self.videoStatusLabel.text = @"Video Ads available...";
 }
 
 - (BOOL)adFlakeTestMode {

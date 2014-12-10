@@ -26,8 +26,8 @@
 #import "TableController.h"
 
 @interface LocationController : TableController <CLLocationManagerDelegate> {
-  CLLocationManager *locationManager;
-  UIInterfaceOrientation currLayoutOrientation;
+	CLLocationManager *locationManager;
+	UIInterfaceOrientation currLayoutOrientation;
 }
 
 @property (nonatomic,readonly) UILabel *locLabel;

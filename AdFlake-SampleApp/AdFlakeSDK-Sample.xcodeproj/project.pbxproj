@@ -95,6 +95,10 @@
 		C526AADF17FB24C70034D8B0 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C526AADE17FB24C70034D8B0 /* CoreMotion.framework */; };
 		C557788917FAE04500429C46 /* komliController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C557788317FAE04500429C46 /* komliController.xib */; };
 		C557788B17FAE04500429C46 /* MRAID.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C557788817FAE04500429C46 /* MRAID.bundle */; };
+		C56614B91A387BFB0010390F /* AdFlakeAdapterGoogleAdMobVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = C56614B81A387BFB0010390F /* AdFlakeAdapterGoogleAdMobVideo.m */; };
+		C56614BD1A388E360010390F /* AdColony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C56614BC1A388E360010390F /* AdColony.framework */; };
+		C56614BF1A388E930010390F /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C56614BE1A388E930010390F /* CoreMedia.framework */; };
+		C56614C21A388EC00010390F /* AdFlakeAdapterAdColonyVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = C56614C11A388EC00010390F /* AdFlakeAdapterAdColonyVideo.m */; };
 		C5A47B4817FF19B400897761 /* AdFlakeAdapterMobFox.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A47B4717FF19B400897761 /* AdFlakeAdapterMobFox.m */; };
 		C5A47B5417FF37C600897761 /* libtodacell-sdk-lib-i386.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A47B4F17FF37C600897761 /* libtodacell-sdk-lib-i386.a */; };
 		C5A47B5517FF37C600897761 /* UserRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A47B5217FF37C600897761 /* UserRecord.m */; };
@@ -309,6 +313,12 @@
 		C557788717FAE04500429C46 /* MRAdView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRAdView.h; sourceTree = "<group>"; };
 		C557788817FAE04500429C46 /* MRAID.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = MRAID.bundle; sourceTree = "<group>"; };
 		C557788C17FAE0E700429C46 /* AdFlakeConfiguration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AdFlakeConfiguration.h; sourceTree = "<group>"; };
+		C56614B71A387BFB0010390F /* AdFlakeAdapterGoogleAdMobVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdFlakeAdapterGoogleAdMobVideo.h; sourceTree = "<group>"; };
+		C56614B81A387BFB0010390F /* AdFlakeAdapterGoogleAdMobVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdFlakeAdapterGoogleAdMobVideo.m; sourceTree = "<group>"; };
+		C56614BC1A388E360010390F /* AdColony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AdColony.framework; sourceTree = "<group>"; };
+		C56614BE1A388E930010390F /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		C56614C01A388EC00010390F /* AdFlakeAdapterAdColonyVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdFlakeAdapterAdColonyVideo.h; sourceTree = "<group>"; };
+		C56614C11A388EC00010390F /* AdFlakeAdapterAdColonyVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdFlakeAdapterAdColonyVideo.m; sourceTree = "<group>"; };
 		C5A47B4617FF19B400897761 /* AdFlakeAdapterMobFox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdFlakeAdapterMobFox.h; sourceTree = "<group>"; };
 		C5A47B4717FF19B400897761 /* AdFlakeAdapterMobFox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdFlakeAdapterMobFox.m; sourceTree = "<group>"; };
 		C5A47B4D17FF37C600897761 /* AdRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdRecord.h; sourceTree = "<group>"; };
@@ -333,6 +343,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C56614BF1A388E930010390F /* CoreMedia.framework in Frameworks */,
 				C526AADF17FB24C70034D8B0 /* CoreMotion.framework in Frameworks */,
 				C526AAAC17FB03720034D8B0 /* AddressBookUI.framework in Frameworks */,
 				A6EC5BCD10A4C30D0091B7F9 /* AddressBook.framework in Frameworks */,
@@ -343,6 +354,7 @@
 				C526AAA817FB03620034D8B0 /* EventKit.framework in Frameworks */,
 				C526AAA617FB035B0034D8B0 /* PassKit.framework in Frameworks */,
 				C526AAA417FB03540034D8B0 /* Social.framework in Frameworks */,
+				C56614BD1A388E360010390F /* AdColony.framework in Frameworks */,
 				C526AAA217FB034B0034D8B0 /* Twitter.framework in Frameworks */,
 				C526AA9617FAF81E0034D8B0 /* CoreTelephony.framework in Frameworks */,
 				C526AA8C17FAE6510034D8B0 /* AdSupport.framework in Frameworks */,
@@ -521,6 +533,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C56614BE1A388E930010390F /* CoreMedia.framework */,
 				C526AADE17FB24C70034D8B0 /* CoreMotion.framework */,
 				C526AAAB17FB03720034D8B0 /* AddressBookUI.framework */,
 				C526AAA917FB03680034D8B0 /* EventKitUI.framework */,
@@ -597,8 +610,12 @@
 		A6EC5B3D10A4B0C60091B7F9 /* Adapters */ = {
 			isa = PBXGroup;
 			children = (
+				C56614C01A388EC00010390F /* AdFlakeAdapterAdColonyVideo.h */,
+				C56614C11A388EC00010390F /* AdFlakeAdapterAdColonyVideo.m */,
 				6B629D471332B9B7000D019C /* AdFlakeAdapterGoogleAdMob.h */,
 				6B629D481332B9B7000D019C /* AdFlakeAdapterGoogleAdMob.m */,
+				C56614B71A387BFB0010390F /* AdFlakeAdapterGoogleAdMobVideo.h */,
+				C56614B81A387BFB0010390F /* AdFlakeAdapterGoogleAdMobVideo.m */,
 				1BF8DFCF11EB855100C2284D /* AdFlakeAdapterGreystripe.h */,
 				1BF8DFD011EB855100C2284D /* AdFlakeAdapterGreystripe.m */,
 				A6051FEE11C7DF6600451D6F /* AdFlakeAdapterIAd.h */,
@@ -665,6 +682,7 @@
 		A6EC5C6310A4C9A50091B7F9 /* AdNetwork SDKs */ = {
 			isa = PBXGroup;
 			children = (
+				C56614BB1A388E360010390F /* AdColony */,
 				C5A47B4C17FF37A900897761 /* TodaCell */,
 				6B629D501332BAB9000D019C /* Google */,
 				1B3FC6E811EB954700C890D2 /* Greystripe */,
@@ -786,6 +804,15 @@
 			path = ../AdNetworkLibs/KomliMobile;
 			sourceTree = "<group>";
 		};
+		C56614BB1A388E360010390F /* AdColony */ = {
+			isa = PBXGroup;
+			children = (
+				C56614BC1A388E360010390F /* AdColony.framework */,
+			);
+			name = AdColony;
+			path = ../AdNetworkLibs/AdColony;
+			sourceTree = "<group>";
+		};
 		C5A47B4917FF1A2300897761 /* MobFox */ = {
 			isa = PBXGroup;
 			children = (
@@ -856,6 +883,11 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0500;
+				TargetAttributes = {
+					1D6058900D05DD3D006BFB54 = {
+						DevelopmentTeam = 75CGX3987N;
+					};
+				};
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "AdFlakeSDK-Sample" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -943,11 +975,13 @@
 				A6ED4930114F0131002C57E6 /* CJSONSerializer.m in Sources */,
 				A6ED4931114F0131002C57E6 /* CSerializedJSONData.m in Sources */,
 				A62A0D36118F7D810013A568 /* AdFlakeAdapterEvent.m in Sources */,
+				C56614C21A388EC00010390F /* AdFlakeAdapterAdColonyVideo.m in Sources */,
 				A6051FF011C7DF6600451D6F /* AdFlakeAdapterIAd.m in Sources */,
 				C526AABF17FB20CA0034D8B0 /* AdFlakeAdapterMobClix.m in Sources */,
 				A605201311C7E20400451D6F /* AdFlakeAdapterMdotM.m in Sources */,
 				1B8B5F0F11E7EE8D002762E3 /* AdFlakeAdapterKomliMobile.m in Sources */,
 				1BF8DFD111EB855100C2284D /* AdFlakeAdapterGreystripe.m in Sources */,
+				C56614B91A387BFB0010390F /* AdFlakeAdapterGoogleAdMobVideo.m in Sources */,
 				1B7CC26C11EFB400004F4937 /* AdFlakeAdapterMillennial.m in Sources */,
 				1B7CC26D11EFB403004F4937 /* AdFlakeAdapterSayMedia.m in Sources */,
 				1B42692611FE25A500910F21 /* AdFlakeAdapterJumpTap.m in Sources */,
@@ -966,11 +1000,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/../AdNetworkLibs",
 					"$(PROJECT_DIR)/../AdNetworkLibs/Mobfox",
+					"/Users/dutty/Documents/Repositories/AdFlake-Client-SDK/iOS/AdNetworkLibs/AdColony",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -982,7 +1019,13 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/../AdNetworkLibs/**",
 				);
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+					"-fobjc-arc",
+				);
 				PRODUCT_NAME = AdFlakeSDK;
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -990,11 +1033,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/../AdNetworkLibs",
 					"$(PROJECT_DIR)/../AdNetworkLibs/Mobfox",
+					"/Users/dutty/Documents/Repositories/AdFlake-Client-SDK/iOS/AdNetworkLibs/AdColony",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AdFlakeSDK-Sample_Prefix.pch";
@@ -1004,7 +1050,13 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/../AdNetworkLibs/**",
 				);
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+					"-fobjc-arc",
+				);
 				PRODUCT_NAME = AdFlakeSDK;
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

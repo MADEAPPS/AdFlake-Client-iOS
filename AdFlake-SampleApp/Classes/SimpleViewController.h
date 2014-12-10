@@ -36,10 +36,11 @@
 - (IBAction)rollOver:(id)sender;
 - (IBAction)showModalView:(id)sender;
 - (IBAction)toggleRefreshAd:(id)sender;
-- (void)adjustLayoutToOrientation:(UIInterfaceOrientation)newOrientation;
+- (IBAction)presentVideoAd:(id)sender;
 - (void)adjustAdSize;
 
 @property (nonatomic,retain) AdFlakeView *adView;
 @property (nonatomic,readonly) UILabel *label;
+@property (nonatomic, assign) IBOutlet UILabel *videoStatusLabel;
 
 @end

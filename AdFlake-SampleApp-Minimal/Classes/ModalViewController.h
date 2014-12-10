@@ -26,7 +26,7 @@
 
 
 @interface ModalViewController : UIViewController {
-
+	
 }
 
 - (IBAction)dismiss:(id)sender;

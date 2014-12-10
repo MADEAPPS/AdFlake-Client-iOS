@@ -36,13 +36,13 @@
 @implementation RootViewController
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-  return YES;
+	return YES;
 }
 
 - (void)didReceiveMemoryWarning {
 	// Releases the view if it doesn't have a superview.
-  [super didReceiveMemoryWarning];
-
+	[super didReceiveMemoryWarning];
+	
 	// Release any cached data, images, etc that aren't in use.
 }
 
@@ -55,163 +55,163 @@
 #pragma mark Table view methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-  return 1;
+	return 1;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  return CONFIG_PREFETCH_ROW+1;
+	return CONFIG_PREFETCH_ROW+1;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-
-  static NSString *CellIdentifier = @"Cell";
-
-  UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-  if (cell == nil) {
-    if ([UITableViewCell instancesRespondToSelector:@selector(initWithStyle:reuseIdentifier:)]) {
-      // iPhone SDK 3.0
-      cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-    }
-    else {
-      // iPhone SDK 2.2.1
-      cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier] autorelease];
-    }
-  }
-
-  switch (indexPath.row) {
-    case 0:
-      if ([cell respondsToSelector:@selector(textLabel)]) {
-        // iPhone SDK 3.0
-        cell.textLabel.text = @"Simple View";
-      }
-      else {
-        // iPhone SDK 2.2.1
-        cell.text = @"Simple View";
-      }
-      break;
-    case 1:
-      if ([cell respondsToSelector:@selector(textLabel)]) {
-        // iPhone SDK 3.0
-        cell.textLabel.text = @"Table Integration";
-      }
-      else {
-        // iPhone SDK 2.2.1
-        cell.text = @"Table Integration";
-      }
-      break;
-    case 2:
-      if ([cell respondsToSelector:@selector(textLabel)]) {
-        // iPhone SDK 3.0
-        cell.textLabel.text = @"Bottom Banner";
-      }
-      else {
-        // iPhone SDK 2.2.1
-        cell.text = @"Bottom Banner";
-      }
-      break;
-    case 3:
-      if ([cell respondsToSelector:@selector(textLabel)]) {
-        // iPhone SDK 3.0
-        cell.textLabel.text = @"Table w/ Location Info";
-      }
-      else {
-        // iPhone SDK 2.2.1
-        cell.text = @"Table w/ Location Info";
-      }
-      break;
-    case CONFIG_PREFETCH_ROW:
-    {
-      NSString *configText;
-      if (configFetched) {
-        configText = @"Update Config";
-      }
-      else {
-        configText = @"Prefetch Config";
-      }
-      if ([cell respondsToSelector:@selector(textLabel)]) {
-        // iPhone SDK 3.0
-        cell.textLabel.text = configText;
-      }
-      else {
-        // iPhone SDK 2.2.1
-        cell.text = configText;
-      }
-      break;
-    }
-  }
-
-  return cell;
+	
+	static NSString *CellIdentifier = @"Cell";
+	
+	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+	if (cell == nil) {
+		if ([UITableViewCell instancesRespondToSelector:@selector(initWithStyle:reuseIdentifier:)]) {
+			// iPhone SDK 3.0
+			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+		}
+		else {
+			// iPhone SDK 2.2.1
+			cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier] autorelease];
+		}
+	}
+	
+	switch (indexPath.row) {
+		case 0:
+			if ([cell respondsToSelector:@selector(textLabel)]) {
+				// iPhone SDK 3.0
+				cell.textLabel.text = @"Simple View";
+			}
+			else {
+				// iPhone SDK 2.2.1
+				cell.text = @"Simple View";
+			}
+			break;
+		case 1:
+			if ([cell respondsToSelector:@selector(textLabel)]) {
+				// iPhone SDK 3.0
+				cell.textLabel.text = @"Table Integration";
+			}
+			else {
+				// iPhone SDK 2.2.1
+				cell.text = @"Table Integration";
+			}
+			break;
+		case 2:
+			if ([cell respondsToSelector:@selector(textLabel)]) {
+				// iPhone SDK 3.0
+				cell.textLabel.text = @"Bottom Banner";
+			}
+			else {
+				// iPhone SDK 2.2.1
+				cell.text = @"Bottom Banner";
+			}
+			break;
+		case 3:
+			if ([cell respondsToSelector:@selector(textLabel)]) {
+				// iPhone SDK 3.0
+				cell.textLabel.text = @"Table w/ Location Info";
+			}
+			else {
+				// iPhone SDK 2.2.1
+				cell.text = @"Table w/ Location Info";
+			}
+			break;
+		case CONFIG_PREFETCH_ROW:
+		{
+			NSString *configText;
+			if (configFetched) {
+				configText = @"Update Config";
+			}
+			else {
+				configText = @"Prefetch Config";
+			}
+			if ([cell respondsToSelector:@selector(textLabel)]) {
+				// iPhone SDK 3.0
+				cell.textLabel.text = configText;
+			}
+			else {
+				// iPhone SDK 2.2.1
+				cell.text = configText;
+			}
+			break;
+		}
+	}
+	
+	return cell;
 }
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-  switch (indexPath.row) {
-    case 0:
-    {
-      SimpleViewController *simple = [[SimpleViewController alloc] init];
-      [self.navigationController pushViewController:simple animated:YES];
-      [simple release];
-      break;
-    }
-    case 1:
-    {
-      TableController *table = [[TableController alloc] init];
-      [self.navigationController pushViewController:table animated:YES];
-      [table release];
-      break;
-    }
-    case 2:
-    {
-      BottomBannerController *bbc = [[BottomBannerController alloc] init];
-      [self.navigationController pushViewController:bbc animated:YES];
-      [bbc release];
-      break;
-    }
-    case 3:
-    {
-      LocationController *loc = [[LocationController alloc] init];
-      [self.navigationController pushViewController:loc animated:YES];
-      [loc release];
-      break;
-    }
-    case CONFIG_PREFETCH_ROW:
-      if (configFetched) {
-        [AdFlakeView updateAdFlakeConfigWithDelegate:self];
-      }
-      else {
-        [AdFlakeView startPreFetchingConfigurationDataWithDelegate:self];
-      }
-      break;
-  }
+	switch (indexPath.row) {
+		case 0:
+		{
+			SimpleViewController *simple = [[SimpleViewController alloc] init];
+			[self.navigationController pushViewController:simple animated:YES];
+			[simple release];
+			break;
+		}
+		case 1:
+		{
+			TableController *table = [[TableController alloc] init];
+			[self.navigationController pushViewController:table animated:YES];
+			[table release];
+			break;
+		}
+		case 2:
+		{
+			BottomBannerController *bbc = [[BottomBannerController alloc] init];
+			[self.navigationController pushViewController:bbc animated:YES];
+			[bbc release];
+			break;
+		}
+		case 3:
+		{
+			LocationController *loc = [[LocationController alloc] init];
+			[self.navigationController pushViewController:loc animated:YES];
+			[loc release];
+			break;
+		}
+		case CONFIG_PREFETCH_ROW:
+			if (configFetched) {
+				[AdFlakeView updateAdFlakeConfigWithDelegate:self];
+			}
+			else {
+				[AdFlakeView startPreFetchingConfigurationDataWithDelegate:self];
+			}
+			break;
+	}
 }
 
 
 - (void)dealloc {
-    [super dealloc];
+	[super dealloc];
 }
 
 
 #pragma mark AdFlakeDelegate methods
 
 - (NSString *)adFlakeApplicationKey {
-  return kSampleAppKey;
+	return kSampleAppKey;
 }
 
 - (UIViewController *)viewControllerForPresentingModalView {
-  return [((AdFlakeSDKSampleAppDelegate *)[[UIApplication sharedApplication] delegate]) navigationController];
+	return [((AdFlakeSDKSampleAppDelegate *)[[UIApplication sharedApplication] delegate]) navigationController];
 }
 
 - (NSURL *)adFlakeConfigURL {
-  return [NSURL URLWithString:kSampleConfigURL];
+	return [NSURL URLWithString:kSampleConfigURL];
 }
 
 - (void)adFlakeDidReceiveConfig:(AdFlakeView *)adFlakeView {
-  NSIndexPath *indexPath = [NSIndexPath indexPathForRow:CONFIG_PREFETCH_ROW inSection:0];
-  [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-  configFetched = YES;
-  [self.tableView reloadData];
+	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:CONFIG_PREFETCH_ROW inSection:0];
+	[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+	configFetched = YES;
+	[self.tableView reloadData];
 }
 
 @end

@@ -39,13 +39,10 @@
 #ifdef ADFLAKE_DEBUG
 	AFLogSetLogLevel(AFLogLevelDebug);
 #endif
-
+	
 	window.rootViewController = self.navigationController;
-
+	
 	[window addSubview:self.navigationController.view];
-
-
-
 	[window makeKeyAndVisible];
 }
 

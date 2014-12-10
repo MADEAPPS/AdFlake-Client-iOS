@@ -28,25 +28,25 @@
 @implementation ModalViewController
 
 - (id)init {
-  if (self = [super initWithNibName:@"ModalViewController" bundle:nil]) {
-    self.title = @"Modal View";
-    if ([self respondsToSelector:@selector(setModalTransitionStyle)]) {
-      [self setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-    }
-  }
-  return self;
+	if (self = [super initWithNibName:@"ModalViewController" bundle:nil]) {
+		self.title = @"Modal View";
+		if ([self respondsToSelector:@selector(setModalTransitionStyle)]) {
+			[self setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+		}
+	}
+	return self;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-  return YES;
+	return YES;
 }
 
 - (IBAction)dismiss:(id)sender {
-  [self dismissModalViewControllerAnimated:YES];
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)dealloc {
-    [super dealloc];
+	[super dealloc];
 }
 
 

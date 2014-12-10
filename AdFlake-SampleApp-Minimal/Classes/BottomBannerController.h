@@ -26,7 +26,7 @@
 #import "SimpleViewController.h"
 
 @interface BottomBannerController : SimpleViewController {
-
+	
 }
 
 @end

@@ -24,7 +24,7 @@
 
 #if !defined(kSampleAppKey)
 #	error "You must define kSampleAppKey as your AdFlake SDK Key"
-//#	define kSampleAppKey	@"YOUR ADFLAKE APP SDK KEY"
+//#	define kSampleAppKey	@"54887f0ea7cfb3bf8cd54418"
 #endif
 
 #define kSampleConfigURL		@"http://api.adflake.com/get"

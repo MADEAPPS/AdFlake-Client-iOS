@@ -2,6 +2,10 @@
 
 For a full detailed change log visit http://www.adflake.com/sdk
 
+==== Version 4.5.0 (Dec 12 2014) ====
+- Added support for Beachfront Interstitial Videos
+- Reduce chance of the same network playing a video ad twice
+
 ==== Version 4.5.0 (Dec 10 2014) ====
 - Added support for Interstitial Videos
 - Added support for AdColony Interstitial Videos

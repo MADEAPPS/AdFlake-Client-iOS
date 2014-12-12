@@ -499,8 +499,10 @@ static BOOL randSeeded = NO;
 	
 	[usedVideoNetworkConfigs removeAllObjects];
 	// for interstitials we just dart a random interstitial each time
-	double currentRandom = 0.0f;
+	double currentRandom = 0.0;
 	double actualPercent = 0.0;
+	double dart = 0.0;
+	bool didRetryDart = false;
 	
 	for (AdFlakeAdNetworkConfig *networkConfig in self.config.videoAdNetworkConfigs)
 	{
@@ -512,12 +514,12 @@ static BOOL randSeeded = NO;
 		
 		actualPercent += networkConfig.trafficPercentage;
 	}
-	const double dart = [self nextRandom] * actualPercent;
-	
+retryDart:
+	dart = [self nextRandom] * actualPercent;
+	currentRandom = 0.0;
 	AFLogDebug(@"video dart=%f", dart);
 
 	AdFlakeAdNetworkConfig *videoNetworkConfig = nil;
-	
 	for (AdFlakeAdNetworkConfig *networkConfig in self.config.videoAdNetworkConfigs)
 	{
 		if ([usedVideoNetworkConfigs containsObject:networkConfig])
@@ -534,6 +536,13 @@ static BOOL randSeeded = NO;
 		currentRandom += networkConfig.trafficPercentage;
 		
 		AFLogDebug(@"config=%@", networkConfig);
+	}
+	
+	// reduce the chance of the same network playing twice
+	if (!didRetryDart && currVideoAdapter != nil && currVideoAdapter.networkConfig.networkType == videoNetworkConfig.networkType)
+	{
+		didRetryDart = true;
+		goto retryDart;
 	}
 	
 	[self requestAndPresentVideoAdModalWithNetworkConfig:videoNetworkConfig];

@@ -24,41 +24,27 @@
 
 #import "AdFlakeConfiguration.h"
 
-#if defined(AdFlake_Enable_SDK_AdColony)
+#if defined(AdFlake_Enable_SDK_BeachfrontIO)
 
-#import "AdFlakeAdapterAdColonyVideo.h"
+#import "AdFlakeAdapterAdBeachfrontVideo.h"
 #import "AdFlakeAdNetworkConfig.h"
 #import "AdFlakeView.h"
 #import "AdFlakeCommon.h"
 #import "AdFlakeAdNetworkRegistry.h"
 
-@implementation AdFlakeAdapterAdColonyVideo
+@implementation AdFlakeAdapterAdBeachfrontVideo
 
 + (void)load {
 	[[AdFlakeAdNetworkRegistry sharedRegistry] registerClass:self];
 }
 
 + (AdFlakeAdNetworkType)networkType {
-	return AdFlakeAdNetworkTypeAdColony;
+	return AdFlakeAdNetworkTypeBeachfrontIO;
 }
 
 + (void)prepareForConfig:(AdFlakeAdNetworkConfig*)networkConfig
 {
 	AFLogDebug(@"%s:%@", __FUNCTION__, networkConfig);
-	
-	// NOTE: we preload our configuration
-	AdFlakeAdapterAdColonyVideo *tempAdapter = [[AdFlakeAdapterAdColonyVideo alloc] initWithAdFlakeDelegate:nil
-																									   view:nil
-																									 config:nil
-																							  networkConfig:networkConfig];
-	
-	
-	[AdColony configureWithAppID:[tempAdapter appID]
-						 zoneIDs:@[[tempAdapter zoneID]]
-						delegate:nil
-						 logging:YES];
-	
-	[tempAdapter release];
 }
 
 - (void)getAd
@@ -69,52 +55,52 @@
 		&& [adFlakeDelegate adFlakeTestMode]) {
 		isTestMode = true;
 	}
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beachFrontDidOpen) name:BFAdInterstitialOpenedNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beachFrontDidStart) name:BFAdInterstitialStartedNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beachFrontDidComplete) name:BFAdInterstitialCompletedNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beachFrontDidClose) name:BFAdInterstitialClosedNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beachFrontDidFail) name:BFAdInterstitialFailedNotification object:nil];
 	
-	[AdColony configureWithAppID:[self appID]
-						 zoneIDs:@[[self zoneID]]
-						delegate:self
-						 logging:isTestMode];
-
-	// give this a few seconds
-	[self performSelector:@selector(tryPlayVideo) withObject:[self zoneID] afterDelay:0.0f];
-}
-
-- (void)tryPlayVideo
-{
-	[AdColony playVideoAdForZone:[self zoneID] withDelegate:self];
+	// play video
+	[BFIOSDK showInterstitialAdWithAppID:[self appID] adUnitID:[self zoneID]];
 }
 
 - (void)stopBeingDelegate
-{ 
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark Ad Request Lifecycle Notifications
 
-- ( void ) onAdColonyAdAvailabilityChange:(BOOL)available inZone:(NSString*) zoneID;
+- (void) beachFrontDidOpen
 {
-	AFLogDebug(@"%s:%i zone:%@", __FUNCTION__, available, zoneID);
-}
-
-- (void) onAdColonyAdStartedInZone:(NSString *)zoneID
-{
-	AFLogDebug(@"%s", __FUNCTION__);
-	
+	AFLogDebug(@"%s:", __FUNCTION__);
 	[self.adFlakeView adapterDidReceiveVideoAd:self];
 	[self helperNotifyDelegateOfFullScreenModal];
 }
 
-- (void) onAdColonyAdAttemptFinished:(BOOL)shown inZone:(NSString *)zoneID
+- (void) beachFrontDidStart
 {
-	AFLogDebug(@"%s", __FUNCTION__);
-	
-	if (!shown)
-	{
-		[self.adFlakeView adapter:self didFailVideoAd:[NSError errorWithDomain:@"AdColony" code:404 userInfo:nil]];
-		return;
-	}
-	
+	AFLogDebug(@"%s:", __FUNCTION__);
+}
+
+- (void) beachFrontDidComplete
+{
+	AFLogDebug(@"%s:", __FUNCTION__);
 	[self.adFlakeView adapterUserWatchedEntireVideoAdModal:self];
+}
+
+- (void) beachFrontDidClose
+{
+	AFLogDebug(@"%s:", __FUNCTION__);
 	[self helperNotifyDelegateOfFullScreenModalDismissal];
+}
+
+- (void) beachFrontDidFail
+{
+	AFLogDebug(@"%s:", __FUNCTION__);
+	[self.adFlakeView adapter:self didFailVideoAd:[NSError errorWithDomain:@"BeachFront" code:404 userInfo:nil]];
 }
 
 #pragma mark parameter gathering methods
@@ -149,6 +135,7 @@
 
 - (void) dealloc
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[super dealloc];
 }
 

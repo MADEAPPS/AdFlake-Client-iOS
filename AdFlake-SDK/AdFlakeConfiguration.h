@@ -43,6 +43,7 @@
 #warning Remove comments from AdNetworks you want to utilize
 
 #define AdFlake_Enable_SDK_AppleIAD		/**< iADs are always available by default. Since no additional dependency. */
+//#define AdFlake_Enable_SDK_BeachfrontIO
 //#define AdFlake_Enable_SDK_GoogleAdMob
 //#define AdFlake_Enable_SDK_AdColony
 //#define AdFlake_Enable_SDK_MdotM

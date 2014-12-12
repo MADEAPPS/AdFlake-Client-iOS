@@ -73,6 +73,9 @@
 		A6ED4931114F0131002C57E6 /* CSerializedJSONData.m in Sources */ = {isa = PBXBuildFile; fileRef = A6ED4927114F0131002C57E6 /* CSerializedJSONData.m */; };
 		A6F6CC7A1149A8B500DFFFEA /* ModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F6CC781149A8B500DFFFEA /* ModalViewController.m */; };
 		A6F6CC7B1149A8B500DFFFEA /* ModalViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6F6CC791149A8B500DFFFEA /* ModalViewController.xib */; };
+		C521BF521A3B01C4000526A1 /* BFIOSDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C521BF501A3B01C4000526A1 /* BFIOSDK.bundle */; };
+		C521BF531A3B01C4000526A1 /* BFIOSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C521BF511A3B01C4000526A1 /* BFIOSDK.framework */; };
+		C521BF561A3B0216000526A1 /* AdFlakeAdapterAdBeachfrontVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = C521BF551A3B0216000526A1 /* AdFlakeAdapterAdBeachfrontVideo.m */; };
 		C526AA8717FAE3BA0034D8B0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C526AA8617FAE3BA0034D8B0 /* Default-568h@2x.png */; };
 		C526AA8A17FAE6330034D8B0 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C526AA8917FAE6330034D8B0 /* StoreKit.framework */; };
 		C526AA8C17FAE6510034D8B0 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C526AA8B17FAE6510034D8B0 /* AdSupport.framework */; };
@@ -244,6 +247,10 @@
 		A6F6CC771149A8B500DFFFEA /* ModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalViewController.h; sourceTree = "<group>"; };
 		A6F6CC781149A8B500DFFFEA /* ModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalViewController.m; sourceTree = "<group>"; };
 		A6F6CC791149A8B500DFFFEA /* ModalViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ModalViewController.xib; sourceTree = "<group>"; };
+		C521BF501A3B01C4000526A1 /* BFIOSDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = BFIOSDK.bundle; sourceTree = "<group>"; };
+		C521BF511A3B01C4000526A1 /* BFIOSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BFIOSDK.framework; sourceTree = "<group>"; };
+		C521BF541A3B0216000526A1 /* AdFlakeAdapterAdBeachfrontVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdFlakeAdapterAdBeachfrontVideo.h; sourceTree = "<group>"; };
+		C521BF551A3B0216000526A1 /* AdFlakeAdapterAdBeachfrontVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdFlakeAdapterAdBeachfrontVideo.m; sourceTree = "<group>"; };
 		C526AA8617FAE3BA0034D8B0 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		C526AA8917FAE6330034D8B0 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		C526AA8B17FAE6510034D8B0 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
@@ -370,6 +377,7 @@
 				C5D4800217FB4D09003217E8 /* libMMSDK_5.1.1.a in Frameworks */,
 				A6EC5BA710A4B18F0091B7F9 /* CoreLocation.framework in Frameworks */,
 				A6EC5BDC10A4C3150091B7F9 /* MapKit.framework in Frameworks */,
+				C521BF531A3B01C4000526A1 /* BFIOSDK.framework in Frameworks */,
 				A6EC5BE510A4C31C0091B7F9 /* MediaPlayer.framework in Frameworks */,
 				A6EC5BF310A4C3400091B7F9 /* MessageUI.framework in Frameworks */,
 				C5D4800417FB4D14003217E8 /* libInMobi-4.0.2.a in Frameworks */,
@@ -610,6 +618,8 @@
 		A6EC5B3D10A4B0C60091B7F9 /* Adapters */ = {
 			isa = PBXGroup;
 			children = (
+				C521BF541A3B0216000526A1 /* AdFlakeAdapterAdBeachfrontVideo.h */,
+				C521BF551A3B0216000526A1 /* AdFlakeAdapterAdBeachfrontVideo.m */,
 				C56614C01A388EC00010390F /* AdFlakeAdapterAdColonyVideo.h */,
 				C56614C11A388EC00010390F /* AdFlakeAdapterAdColonyVideo.m */,
 				6B629D471332B9B7000D019C /* AdFlakeAdapterGoogleAdMob.h */,
@@ -683,6 +693,7 @@
 			isa = PBXGroup;
 			children = (
 				C56614BB1A388E360010390F /* AdColony */,
+				C521BF4E1A3B01C4000526A1 /* Beachfront */,
 				C5A47B4C17FF37A900897761 /* TodaCell */,
 				6B629D501332BAB9000D019C /* Google */,
 				1B3FC6E811EB954700C890D2 /* Greystripe */,
@@ -755,6 +766,24 @@
 				A6ED4927114F0131002C57E6 /* CSerializedJSONData.m */,
 			);
 			path = JSON;
+			sourceTree = "<group>";
+		};
+		C521BF4E1A3B01C4000526A1 /* Beachfront */ = {
+			isa = PBXGroup;
+			children = (
+				C521BF4F1A3B01C4000526A1 /* BFIOSDK.embeddedframework */,
+			);
+			name = Beachfront;
+			path = ../AdNetworkLibs/Beachfront;
+			sourceTree = "<group>";
+		};
+		C521BF4F1A3B01C4000526A1 /* BFIOSDK.embeddedframework */ = {
+			isa = PBXGroup;
+			children = (
+				C521BF501A3B01C4000526A1 /* BFIOSDK.bundle */,
+				C521BF511A3B01C4000526A1 /* BFIOSDK.framework */,
+			);
+			path = BFIOSDK.embeddedframework;
 			sourceTree = "<group>";
 		};
 		C526AA9717FAFACC0034D8B0 /* MdotM */ = {
@@ -925,6 +954,7 @@
 				C526AAB817FB1E6F0034D8B0 /* Icon-iOS@2x.png in Resources */,
 				A630FDAA110FB3E700D6740A /* BottomBannerController.xib in Resources */,
 				C526AABC17FB1E6F0034D8B0 /* Icon-iOS7@2x.png in Resources */,
+				C521BF521A3B01C4000526A1 /* BFIOSDK.bundle in Resources */,
 				A6A7998D1120D69600A00FD8 /* LocationController.xib in Resources */,
 				C557788917FAE04500429C46 /* komliController.xib in Resources */,
 				C526AA8717FAE3BA0034D8B0 /* Default-568h@2x.png in Resources */,
@@ -953,6 +983,7 @@
 				A6EC5B7A10A4B0C60091B7F9 /* AdFlakeView.m in Sources */,
 				C5CE417517FF0A4F00710B02 /* AdFlakeAdapterLeadBolt.m in Sources */,
 				A6EC5B7C10A4B0C60091B7F9 /* AdFlakeWebBrowserController.m in Sources */,
+				C521BF561A3B0216000526A1 /* AdFlakeAdapterAdBeachfrontVideo.m in Sources */,
 				A6EC5CB910A4DCA00091B7F9 /* AdFlakeAdapterCustom.m in Sources */,
 				A6EC5CBA10A4DCA00091B7F9 /* AdFlakeAdapterGeneric.m in Sources */,
 				A6EC5CBB10A4DCA00091B7F9 /* AdFlakeAdNetworkAdapter.m in Sources */,
@@ -1008,6 +1039,7 @@
 					"$(PROJECT_DIR)/../AdNetworkLibs",
 					"$(PROJECT_DIR)/../AdNetworkLibs/Mobfox",
 					"/Users/dutty/Documents/Repositories/AdFlake-Client-SDK/iOS/AdNetworkLibs/AdColony",
+					"/Users/dutty/Documents/Repositories/AdFlake-Client-SDK/iOS/AdNetworkLibs/Beachfront/BFIOSDK.embeddedframework",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1041,6 +1073,7 @@
 					"$(PROJECT_DIR)/../AdNetworkLibs",
 					"$(PROJECT_DIR)/../AdNetworkLibs/Mobfox",
 					"/Users/dutty/Documents/Repositories/AdFlake-Client-SDK/iOS/AdNetworkLibs/AdColony",
+					"/Users/dutty/Documents/Repositories/AdFlake-Client-SDK/iOS/AdNetworkLibs/Beachfront/BFIOSDK.embeddedframework",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AdFlakeSDK-Sample_Prefix.pch";

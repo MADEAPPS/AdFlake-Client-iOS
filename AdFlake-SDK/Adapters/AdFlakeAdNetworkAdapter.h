@@ -58,7 +58,8 @@ typedef enum {
 	AdFlakeAdNetworkTypeTodacell		  = 30,
 	AdFlakeAdNetworkTypeAppBrain		  = 31,	/**< NOTE: Android only. */
 	AdFlakeAdNetworkTypeAdColony		  = 32,
-	AdFlakeAdNetworkTypeAdMobVideo		  = 33
+	AdFlakeAdNetworkTypeAdMobVideo		  = 33,
+	AdFlakeAdNetworkTypeBeachfrontIO	  = 34
 } AdFlakeAdNetworkType;
 
 @class AdFlakeView;
